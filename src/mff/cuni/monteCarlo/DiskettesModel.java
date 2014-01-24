@@ -3,6 +3,8 @@ package mff.cuni.monteCarlo;
 import java.util.ArrayList;
 import java.util.Random;
 
+import mff.cuni.config.ConstantsMonteCarlo;
+
 
 public class DiskettesModel {
 	
@@ -24,7 +26,8 @@ public class DiskettesModel {
 
 		for (int i = 0; i < count; i++) {
 
-			int fileSize = (generator.nextInt(4) +1);
+			int fileSize = (generator.nextInt(
+					ConstantsMonteCarlo.maxSizeOfFiles) +1);
 			insert(fileSize);
 		}
 	}

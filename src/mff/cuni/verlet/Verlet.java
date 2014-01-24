@@ -20,7 +20,7 @@ public class Verlet {
 		
 		// mm contains: oldR, oldV, oldF
 		// joining molecules which are too close
-//		mm.recountMOld();
+		//mm.recountMOld();
 
 		mm.countR();
 		mm.countF();
@@ -35,7 +35,7 @@ public class Verlet {
 		
 		System.out.println("Step: " + 0);
 		System.out.println("  TotalStartP: " + totalStartP);
-//		mm.printModel();
+		//mm.printModel();
 
 		for (int t = 1; t < ConstantsVerlet.repeat; t++) {
 
@@ -61,7 +61,7 @@ public class Verlet {
 			double totalP = mmNew.countTotalP();
 			System.out.println("  TotalP: " + totalP);
 
-//			mmNew.printModel();
+			//mmNew.printModel();
 			
 			Gui.setMolecules(mmNew);
 			try {
