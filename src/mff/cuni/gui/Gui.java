@@ -8,8 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -19,12 +17,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import mff.cuni.algorithm.monteCarlo.MonteCarlo;
-import mff.cuni.algorithm.verlet.Verlet;
 import mff.cuni.config.ConstantsVerlet;
-import mff.cuni.molecule.Generator;
-import mff.cuni.molecule.Molecule;
-import mff.cuni.molecule.MoleculesModel;
+import mff.cuni.monteCarlo.MonteCarlo;
+import mff.cuni.verlet.MoleculesModel;
+import mff.cuni.verlet.Verlet;
 
 public class Gui {
 
@@ -35,8 +31,7 @@ public class Gui {
 	
 	public static void start() {
 		
-		MoleculesModel model =
-				Generator.generateMolecules(0);
+		MoleculesModel model = new MoleculesModel();
 
 		JMenuItem menuItemVerlet = new JMenuItem("Verlet - Dinamika N gravitacnich castic");
         menuItemVerlet.addActionListener(new VerletAL());

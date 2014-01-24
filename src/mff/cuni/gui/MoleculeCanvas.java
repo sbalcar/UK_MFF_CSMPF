@@ -3,14 +3,12 @@ package mff.cuni.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.util.ArrayList;
 
 import javax.swing.JComponent;
 
 import mff.cuni.config.ConstantsVerlet;
-import mff.cuni.config.VectorDouble2D;
-import mff.cuni.molecule.Molecule;
-import mff.cuni.molecule.MoleculesModel;
+import mff.cuni.verlet.Molecule;
+import mff.cuni.verlet.MoleculesModel;
 
 public class MoleculeCanvas extends JComponent {
 	
@@ -48,21 +46,20 @@ public class MoleculeCanvas extends JComponent {
 	    g.setColor(Color.blue);
 	    int centerX = (int) (ConstantsVerlet.widthOfCanvas * m.x);
 	    int centerY = (int) (ConstantsVerlet.heightOfCanvas * m.y);
-//	    int radius = Constants.sizeOfMolecule * m.m/2;
 	    int radius = (int) (ConstantsVerlet.widthOfCanvas * m.getRadius());
-	    
+
 	    g.fillOval(centerX - radius/2,
 	    		centerY - radius/2,
 	    		radius, radius);
 	    
 	    g.setColor(Color.black);
-	    double fx = m.fx;
-	    double fy = m.fy;
+	    double fx = m.fOldx /100;
+	    double fy = m.fOldy /100;
 	    
-	    int lineX = (int) (fx / 10);
-	    int lineY = (int) (fy / 10);
-//	    g.drawLine(centerX, centerY,
-//	    		centerX + 2*lineX, centerY + 2*lineY);
+	    int lineX = (int) (100*fx);
+	    int lineY = (int) (100*fy);
+	    g.drawLine(centerX, centerY,
+	    		centerX + 2*lineX, centerY + 2*lineY);
 	    
 	    g.setColor(Color.red);
 	    g.drawString("M:" + m.m, centerX -5, centerY +5);
