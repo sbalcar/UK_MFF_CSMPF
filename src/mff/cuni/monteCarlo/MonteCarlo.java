@@ -7,34 +7,43 @@ import mff.cuni.config.ConstantsMonteCarlo;
 
 public class MonteCarlo {
 
+	public DiskettesModel dm = null;
+	public double fitnessResult = -1;
+	public int lastGenerationNum = -1;
+	
 	public void run() {
-		
-		DiskettesModel dm = new DiskettesModel();
+
+		dm = new DiskettesModel();
 		dm.generateFiles(ConstantsMonteCarlo.numberOfFiles);		
 
-		double probabilityOfChanege = 0;
 		Random random = new Random();
 
+		int numGenI = 0;
+		double fitnessOld = -1;
+		double probabilityOfChanege = 0;
 		
-		for (int i = 0; i < ConstantsMonteCarlo.repeat; i++) {
-			
-			double fitnessOld = dm.fitness();
-			System.out.println("Generation:" + i + "  FreeSpaceRatio:  " + fitnessOld);
+		for (numGenI = 0; numGenI < ConstantsMonteCarlo.repeat; numGenI++) {
+
+			fitnessOld = dm.fitness();
+			System.out.println("Generation:" + numGenI + "  FreeSpaceRatio:  " + fitnessOld);
 			//dm.print();
-			
+
 			if (fitnessOld == 0.0) {
+				this.fitnessResult = fitnessOld;
+				this.lastGenerationNum = numGenI;
 				break;
 			}
-			
+
 			ArrayList <Integer> files = dm.getFiles();
 			makeStep(files);
-			
+
 			DiskettesModel dmNew = new DiskettesModel(files);
 
 			double fitnessNew = dmNew.fitness();			
 			if (fitnessNew <= fitnessOld) {
-				
-				if (0.95 >= random.nextDouble()) {
+
+				if (ConstantsMonteCarlo.ACCEPTANCE_PROBABILITY >=
+						random.nextDouble()) {
 					dm = dmNew;
 				}
 
@@ -44,12 +53,16 @@ public class MonteCarlo {
 					dm = dmNew;
 					probabilityOfChanege = 0;
 				} else {
-					probabilityOfChanege += ConstantsMonteCarlo.SIMULATED_ANNEALING_DIFF;
+					probabilityOfChanege +=
+							ConstantsMonteCarlo.SIMULATED_ANNEALING_DIFF;
 				}
-				
+
 			}
-			
+
 		}
+
+		this.fitnessResult = fitnessOld;
+		this.lastGenerationNum = numGenI;
 	}
 		
 	private void makeStep(ArrayList <Integer> files) {
