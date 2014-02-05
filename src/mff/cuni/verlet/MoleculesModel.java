@@ -36,6 +36,9 @@ public class MoleculesModel {
 			
 			mNew.vOldx = m.vx;
 			mNew.vOldy = m.vy;
+			
+			mNew.isPrecipitated = m.isPrecipitated;
+			
 						
 			this.molecules.add(mNew);
 		}
@@ -228,22 +231,66 @@ public class MoleculesModel {
 	private boolean recountMSpringy_() {
 		
 		double [][] distances = countDistances(molecules);
-				
+
+		int WAS_PRECIPITATED = 1;
+		int IS_PRECIPITATED = 2;
+		
 		for (int i = 0; i < molecules.size(); i++) {
+			int abc = 0;
 			for (int j = 0; j < molecules.size(); j++) {
 
 				if (i >= j) {
 					continue;
 				}
-				
+
 				Molecule mI = molecules.get(i);
 				Molecule mJ = molecules.get(j);
-				
-				if (distances[i][j] < ConstantsVerlet.minDistace/2) {
+
+				if (distances[i][j] < ConstantsVerlet.minDistace) {
+	
+					if (mI.isPrecipitated == WAS_PRECIPITATED)
+						continue;
+					if (mJ.isPrecipitated == WAS_PRECIPITATED)
+						continue;
+
 					joinSpringy(mI, mJ);
+
+					mI.isPrecipitated = WAS_PRECIPITATED;
+					mJ.isPrecipitated = WAS_PRECIPITATED;
+
+				} else {
+					
+//					abc++;
+//					if (abc == molecules.size()) {
+//						mI.isPrecipitated = -1;
+//					}
 				}
+				
 			}
 		}
+		
+		for (int i = 0; i < molecules.size(); i++) {
+			
+			Molecule mI = molecules.get(i);
+			
+			int distanceCounter = 0;
+			for (int j = 0; j < molecules.size(); j++) {
+
+				if (i == j) {
+					continue;
+				}
+
+				if (distances[i][j] >= ConstantsVerlet.minDistace) {
+					distanceCounter++;
+				}
+		   }
+			
+			if (distanceCounter == molecules.size() -1) {
+				mI.isPrecipitated = -1;
+			}
+			
+		}
+
 		return true;
 	}
 
@@ -354,11 +401,11 @@ public class MoleculesModel {
 
 	private void joinSpringy(Molecule molecule1, Molecule molecule2) {
 
-		double p1x = molecule1.m * molecule1.x;
-		double p1y = molecule1.m * molecule1.y;
+		double p1x = molecule1.m * molecule1.vx;
+		double p1y = molecule1.m * molecule1.vy;
 
-		double p2x = molecule2.m * molecule2.x;
-		double p2y = molecule2.m * molecule2.y;
+		double p2x = molecule2.m * molecule2.vx;
+		double p2y = molecule2.m * molecule2.vy;
 
 		molecule1.vx = p2x / molecule1.m;
 		molecule1.vy = p2y / molecule1.m;
@@ -451,17 +498,19 @@ public class MoleculesModel {
 
 	public double countTotalP() {
 
-		double totalP = 0;
+		double totalPx = 0;
+		double totalPy = 0;
+		
 		for (int i = 0; i < this.molecules.size(); i++) {
 			Molecule moleculeI = this.molecules.get(i);
 
-			double velocity2 = Math.pow(moleculeI.vx, 2) +
-					Math.pow(moleculeI.vy, 2);
-
-			totalP += moleculeI.m * Math.pow(velocity2, 0.5);
+			totalPx += moleculeI.m * moleculeI.vx;
+			totalPy += moleculeI.m * moleculeI.vy;			
 		}
-
-		return totalP;	
+		
+		double p2 = Math.pow(totalPx, 2) + Math.pow(totalPy, 2);
+	
+		return Math.pow(p2, 0.5);
 	}
 
 

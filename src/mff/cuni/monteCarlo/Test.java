@@ -56,7 +56,7 @@ public class Test {
 			lastGenerationNumsM1.add(m1.lastGenerationNum);
 			fitnessResultsM1.add(m1.fitnessResult);
 		}
-		
+
         try {
         	
           File file = new File(fileName);

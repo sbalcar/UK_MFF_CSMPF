@@ -24,6 +24,7 @@ public class Molecule {
 	public double fOldx;
 	public double fOldy;
 
+	public int isPrecipitated;
 
 	public Molecule() {
 		this.m = 0;
@@ -41,6 +42,7 @@ public class Molecule {
 		this.vx = 0;
 		this.vy = 0;
 
+		this.isPrecipitated = -1;
 	}
 
 	public double getRadius() {

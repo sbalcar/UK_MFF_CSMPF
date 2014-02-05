@@ -1,23 +1,28 @@
 package mff.cuni.verlet;
 
+import java.util.ArrayList;
+
 import mff.cuni.config.ConstantsVerlet;
 import mff.cuni.gui.Gui;
 
 
 public class Verlet {
 
+	public MoleculesModel mm = null;
+	public ArrayList<Double> energy = new ArrayList<Double>();
+	
 	public void run() {
 
-		MoleculesModel mm = new MoleculesModel();
+		mm = new MoleculesModel();
 		mm.generateMolecules(ConstantsVerlet.numberOfMolecules);
 		mm.generateM();
 		mm.generateOldR();
-		mm.generateOldV();
+//		mm.generateOldV();
 		
 		double totalStartP = mm.countTotalP();
-		
+
 		mm.countOldF();
-		
+
 		// mm contains: oldR, oldV, oldF
 		// joining molecules which are too close
 		//mm.recountMOld();
@@ -32,7 +37,7 @@ public class Verlet {
 		}
 		// mm contains: oldR, oldV, oldF, R, V, F
 
-		
+
 		System.out.println("Step: " + 0);
 		System.out.println("  TotalStartP: " + totalStartP);
 		//mm.printModel();
@@ -57,15 +62,21 @@ public class Verlet {
 
 			double totalE = mmNew.countTotalE();
 			System.out.println("  TotalE: " + totalE);
+			energy.add(totalE);
 
 			double totalP = mmNew.countTotalP();
 			System.out.println("  TotalP: " + totalP);
 
 			//mmNew.printModel();
 			
-			Gui.setMolecules(mmNew);
+			if (! ConstantsVerlet.debugMode) {
+				Gui.setMolecules(mmNew);
+			}
+			
 			try {
-				Thread.sleep(100);
+				if (! ConstantsVerlet.debugMode) {
+					Thread.sleep(100);
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
