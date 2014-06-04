@@ -360,19 +360,19 @@ public class Model {
 		return false;
 	}
 
-	public Vector getEkin() {
+	public double getEkin() {
 
-		Vector vector = new Vector(0, 0);
+		double energy = 0;
 
 		for (Molecule moleculeI : getMolecules() ) {
 
-			vector.plusToVector( moleculeI.getEkin() );
+			energy += moleculeI.getEkin();
 		}
 
-		return vector;
+		return energy;
 	}
 
-	public Vector getEpot() {
+	public double getEpot() {
 
 		/*
 		 * How to count potential Energy:
@@ -395,28 +395,30 @@ public class Model {
 		 * absolute values of energy.
 		 * 
 		 */
-		Vector potential = new Vector(0, 0);
+		double potential = 0;
 
 		for (int i = 0; i < getNumOfMolecules(); i++ ) {
+			for (int j = i+1; j < getNumOfMolecules(); j++ ) {
 
-			Molecule moleculeI = getMoleculeBySN(i);
+				Molecule moleculeI = getMoleculeBySN(i);
+				Molecule moleculeJ = getMoleculeBySN(j);
 
-			int startSN = i+1;
-			int endSN = getNumOfMolecules() -1;
+				Distance vectorDistance = moleculeI.getDistance(moleculeJ);
+				double distance = (int) vectorDistance.getNorm();
 
-			Vector potentialI = moleculeI.getPotential(startSN, endSN);
-			potential.plusToVector( potentialI.absolutValue() );
+				potential += moleculeI.getM() * moleculeJ.getM() / distance;
+			}
 		}
 
-		return potential.absolutValue().multiplyVector( new Vector(-1, -1) );
+		return potential * (-1);
 	}
 
-	public Vector getEtot() {
+	public double getEtot() {
 		
-		Vector vectorEkin = getEkin();
-		Vector vectorEpot = getEpot();
+		double vectorEkin = getEkin();
+		double vectorEpot = getEpot();
 
-		return vectorEpot.plusVector(vectorEkin);
+		return vectorEpot + vectorEkin;
 	}
 
 	public Vector getP() {
@@ -439,14 +441,14 @@ public class Model {
 //		this.getMolecule(0).getF().print("F0");
 //		this.getMolecule(1).getF().print("F1");
 
-		Vector vectorEkin = getEkin();
-		vectorEkin.print("Ekin");
+		double Ekin = getEkin();
+		System.out.println("Ekin: " + Ekin);
 
-		Vector vectorEpot = getEpot();
-		vectorEpot.print("Epot");
+		double Epot = getEpot();
+		System.out.println("Epot: " + Epot);
 
-		Vector vectorEtot = getEtot();
-		vectorEtot.print("Etot");
+		double Etot = getEtot();
+		System.out.println("Etot: " + Etot);
 
 		Vector vectorP = getP();
 		vectorP.print("P");

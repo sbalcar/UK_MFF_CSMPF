@@ -3,7 +3,6 @@ package verlet.algorithm;
 
 import verlet.algorithm.Model.JoinType;
 import verlet.gui.Gui;
-import verlet.vector.Vector;
 
 
 public class VerletAlgorithm {
@@ -11,19 +10,24 @@ public class VerletAlgorithm {
 	public static int NUMBER_OF_MOLECULES = 2;
 	public static int NUMBER_OF_GENERATIONS = 20000;
 	public static double DIFF_TIME = 10;
-
+	
 	private int t = 0;
+	private JoinType joinType = JoinType.ELASTIC_JOIN;
+
+	public void setJoinType(JoinType joinType) {
+		this.joinType = joinType;
+	}
 
 	public void run() {
 
 		System.out.println("Generation: " + t);
 
-		Model model = new Model(JoinType.ELASTIC_JOIN);		
+		Model model = new Model(joinType);		
 		model.generateModel(NUMBER_OF_MOLECULES);
 		Gui.setMolecules(model);
 		model.print();
 
-		Vector EtotFirst = model.getEtot();
+		double EtotFirst = model.getEtot();
 
 		for (t = 1; t <= NUMBER_OF_GENERATIONS; t++) {
 
@@ -36,9 +40,9 @@ public class VerletAlgorithm {
 			modelNew.print();
 			Gui.setMolecules(modelNew);
 
-			Vector EtotNew = modelNew.getEtot();
-			Vector error = countError(EtotFirst, EtotNew);
-			error.print("Error % : ");
+			double EtotNew = modelNew.getEtot();
+			double error = countError(EtotFirst, EtotNew);
+			System.out.println("Error % : " + error);
 
 			try {
 				Thread.sleep(100);
@@ -52,19 +56,12 @@ public class VerletAlgorithm {
 	}
 
 
-	private Vector countError(Vector EtotFirst, Vector EtotNew) {
+	private double countError(double EtotFirst, double EtotNew) {
 		
-		Vector diff = EtotFirst.minusVector(EtotNew).absolutValue();
+		double diff = EtotFirst - EtotNew;
 
-		double ExFirst = EtotFirst.getX();
-		double EyFirst = EtotFirst.getY();
+		double EPercent = diff / EtotFirst * 100;
 
-		double Ediffx = diff.getX();
-		double Ediffy = diff.getY();
-
-		double ExPercent = Ediffx / ExFirst * 100;
-		double EyPercent = Ediffy /EyFirst  * 100;
-
-		return new Vector(ExPercent, EyPercent);
+		return EPercent;
 	}
 }

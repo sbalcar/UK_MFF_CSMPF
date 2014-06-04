@@ -132,7 +132,7 @@ public class Molecule {
 		return vectorF;
 	}
 
-	public Vector getPotential(int startSN, int endSN) {
+	public double getPotential(int startSN, int endSN) {
 
 		if ( startSN < 0  ||
 		     endSN >= getModel().getNumOfMolecules() ) {
@@ -140,18 +140,16 @@ public class Molecule {
 			throw new IllegalStateException("Parameters are not valid");
 		}
 
-		Vector vectorP = new Vector(0, 0);
+		double potential = 0;
 
 		for (int i = startSN; i <= endSN; i++) {
 
 			Molecule moleculeI = model.getMoleculeBySN(i);
 
-			Vector vectorPI = countPotentialofMolule(moleculeI);
-			vectorP.plusToVector(vectorPI);
-
+			potential += countPotentialofMolule(moleculeI);
 		}
 
-		return vectorP;
+		return potential;
 	}
 
 
@@ -216,7 +214,7 @@ public class Molecule {
 	}
 
 	// pocita potencial mezi aktualni molekulou a molekulou v parametru
-	private Vector countPotentialofMolule(Molecule molecule) {
+	private double countPotentialofMolule(Molecule molecule) {
 		
 		double m1 = getM();
 		double m2 = molecule.getM();
@@ -224,18 +222,7 @@ public class Molecule {
 		Distance distance = getDistance(molecule);
 		double distanceScalar = distance.getNorm();
 
-		double ratioXdivY = distance.getX() / distance.getY();
-
-		double PotentialScalar = m1 * m2 / distanceScalar;
-		
-        double PotentialY = Math.pow(
-        		Math.pow(PotentialScalar, 2) / (ratioXdivY + 1),
-        		0.5 
-        		);
-        double PotentialX = ratioXdivY * PotentialY;
-
-
-		return new Vector(PotentialX, PotentialY);
+		return m1 * m2 / distanceScalar;
 
 	}
 
@@ -317,7 +304,7 @@ public class Molecule {
 		Molecule[] moleculesNew = new Molecule[2];
 		moleculesNew[0] = molNew1;
 		moleculesNew[1] = molNew2;
-		
+
 		return moleculesNew;
 	}
 
@@ -341,15 +328,14 @@ public class Molecule {
 		this.velocity = new Vector(vXNew, vYNew);
 	}
 
-	public Vector getEkin() {
+	public double getEkin() {
 
 		double vX = getVelocity().getX();
 		double vY = getVelocity().getY();
 
-		double EkinX = 0.5 * m * Math.pow(vX, 2);
-		double EkinY = 0.5 * m * Math.pow(vY, 2);
+		double Ekin = 0.5 * m * (vX*vX + vY*vY);
 		
-		return new Vector(EkinX, EkinY);
+		return Ekin;
 	}
 
 	// Hybnost molekuly

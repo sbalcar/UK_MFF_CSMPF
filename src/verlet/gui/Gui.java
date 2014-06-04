@@ -120,12 +120,7 @@ public class Gui {
 
 class VerletPlasticAL implements ActionListener {
 	  public void actionPerformed(ActionEvent e) {
-/*
-	      String numOfMolecules = JOptionPane.showInputDialog(
-	    		  "Zadejte pocet castic");
-	      int numberOfMolecules =
-	    		  Integer.parseInt(numOfMolecules);
-*/
+
 		  Thread vt = new VerletPlasticThread();
 		  vt.start();
 
@@ -136,8 +131,15 @@ class VerletPlasticAL implements ActionListener {
 class VerletPlasticThread extends Thread {
 
     public void run() {
-    	
+
+    	String numOfMolecules = JOptionPane.showInputDialog(
+	    		  "Zadejte pocet castic");
+	    int numberOfMolecules =
+	    		  Integer.parseInt(numOfMolecules);
+
     	VerletAlgorithm v = new VerletAlgorithm();
+    	VerletAlgorithm.NUMBER_OF_MOLECULES = numberOfMolecules;
+		v.setJoinType(JoinType.PLASTICAL_JOIN);
 		v.run();
 
     }
@@ -146,13 +148,6 @@ class VerletPlasticThread extends Thread {
 
 class VerletElasticAL implements ActionListener {
 	  public void actionPerformed(ActionEvent e) {
-
-	      String numOfMolecules = JOptionPane.showInputDialog(
-	    		  "Zadejte pocet castic");
-	      int numberOfMolecules =
-	    		  Integer.parseInt(numOfMolecules); 
-
-		  boolean isPlastical = false;
 
 		  Thread vt = new VerletElasticThread();
 		  vt.start();
@@ -164,10 +159,17 @@ class VerletElasticAL implements ActionListener {
 class VerletElasticThread extends Thread {
 
   public void run() {
-  	
-		VerletAlgorithm v =
+
+	  String numOfMolecules = JOptionPane.showInputDialog(
+    		  "Zadejte pocet castic");
+      int numberOfMolecules =
+    		  Integer.parseInt(numOfMolecules); 
+
+      VerletAlgorithm v =
 				new VerletAlgorithm();
-		v.run();
+      v.setJoinType(JoinType.ELASTIC_JOIN);
+      VerletAlgorithm.NUMBER_OF_MOLECULES = numberOfMolecules;
+      v.run();
 
   }
 }
