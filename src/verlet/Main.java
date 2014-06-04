@@ -9,9 +9,5 @@ public class Main {
 		System.out.println("Verlet:");
 
 		Gui.start();
-
-		//VerletAlgorithm verlet = new VerletAlgorithm();
-		//verlet.run();
-
 	}
 }
